@@ -1,8 +1,10 @@
-#import nltk
-#nltk.download('inaugural')
+import nltk
+from nltk.corpus import stopwords
 from nltk.corpus import inaugural, PlaintextCorpusReader
 from CorpusReader_TFIDF import *
-
+stops = set(stopwords.words('english'))
+print(stops)
+'''
 myCorpus = CorpusReader_TFIDF(inaugural)
 print('Outside')
 tfidf = myCorpus.tfidfAll(True)
@@ -17,6 +19,7 @@ print(myCorpus.cosine_sim('1793-Washington.txt', '2013-Obama.txt'))
 
 print(len(myCorpus.tfidf('2009-Obama.txt')))
 print(len(myCorpus.tfidf('2009-Obama.txt', True)))
+'''
 
 '''
 i = 0

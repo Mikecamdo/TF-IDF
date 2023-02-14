@@ -2,6 +2,7 @@ import nltk.corpus
 import math
 import numpy as np
 from numpy.linalg import norm
+from nltk.corpus import stopwords
 
 #FIXME take a look at Plaintext Corpus Reader (?)
 
@@ -17,11 +18,20 @@ class CorpusReader_TFIDF:
         self.ignoreCase = ignoreCase
         #FIXME Professor recommends calculating all TF-IDF in the constructors
         #TF-IDF should be represented in a dictionary
+        stops = [ ] #leave empty if stopWord == "none"
+        if stopWord == "standard":
+            stops = set(stopwords.words('english'))
+        else: #if stopWord == fileName (that contains a list of stop words)
+            with open(stopWord, 'r') as file:
+                for line in file:
+                    for word in line.split():
+                        stops.append(word)
 
+        
         allWords = [ ] #Every word that appears in the corpus
         for fileid in self.corpus.fileids():
             for word in self.corpus.words(fileid):
-                if word not in allWords:
+                if word not in allWords and word not in stops:
                     allWords.append(word)
         #TF
         raw_idf_count = { }
@@ -38,7 +48,7 @@ class CorpusReader_TFIDF:
                 if word in raw_tf_count:
                     raw_tf_count[word] += 1
 
-                if word not in raw_idf_count: #if first instance of word across all documents
+                if word not in raw_idf_count and word not in stops: #if first instance of word across all documents
                     raw_idf_count[word] = [fileid]
                 elif word in raw_idf_count and fileid not in raw_idf_count[word]: #if first instance of word in current document
                     raw_idf_count[word].append(fileid)
@@ -73,6 +83,7 @@ class CorpusReader_TFIDF:
         self.tf_idf = tf_idf
         self.tf_idf_with_zeros = tf_idf_with_zeros
         self.idf_count = idf_count
+        self.stops = stops
         #FIXME do I need to save the tf???
 
     
@@ -116,7 +127,7 @@ class CorpusReader_TFIDF:
         raw_tf_count = { }
         allWords = [ ] #holds each unique word
         for word in words:
-            if word not in raw_tf_count:
+            if word not in raw_tf_count and word not in self.stops:
                 raw_tf_count[word] = 1
                 allWords.append(word)
             elif word in raw_tf_count:
