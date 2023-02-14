@@ -8,6 +8,7 @@ from numpy.linalg import norm
 class CorpusReader_TFIDF:
     # Constructor
     def __init__(self, corpus, tf = "raw", idf = "base", stopWord = "none", toStem = False, ignoreCase = True):
+        #FIXME what should happen if non-supported parameters are given?? like tf = "random"
         self.corpus = corpus
         self.tf = tf
         self.idf = idf
@@ -42,6 +43,11 @@ class CorpusReader_TFIDF:
                 elif word in raw_idf_count and fileid not in raw_idf_count[word]: #if first instance of word in current document
                     raw_idf_count[word].append(fileid)
         
+            if tf == "log": #Applies log normalization if requested
+                for word in allWords:
+                    if raw_tf_count[word] > 0:
+                        raw_tf_count[word] = 1 + math.log2(raw_tf_count[word])
+
             all_tf[fileid] = raw_tf_count
         
 
@@ -103,12 +109,21 @@ class CorpusReader_TFIDF:
 
 
     def tfidfNew(self, words): #FIXME need to implement different tf type, etc.
+        #FIXME do I need to include values with 0??
         raw_tf_count = { }
+        allWords = [ ] #holds each unique word
         for word in words:
             if word not in raw_tf_count:
                 raw_tf_count[word] = 1
+                allWords.append(word)
             elif word in raw_tf_count:
                 raw_tf_count[word] += 1
+
+        if self.tf == "log": #Applies log normalization if requested
+            for word in allWords:
+                if raw_tf_count[word] > 0: #FIXME this if statement is redundant (I think)
+                    raw_tf_count[word] = 1 + math.log2(raw_tf_count[word])
+
 
         new_tf_idf = { }
         for word in raw_tf_count:
