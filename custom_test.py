@@ -5,7 +5,7 @@ from CorpusReader_TFIDF import *
 
 myCorpus = CorpusReader_TFIDF(inaugural)
 print('Outside')
-tfidf = myCorpus.tfidfAll()
+tfidf = myCorpus.tfidfAll(True)
 for document in tfidf:
     print(document, len(tfidf[document]))
 
@@ -14,6 +14,10 @@ print(myCorpus.cosine_sim('2013-Obama.txt', '2009-Obama.txt'))
 print(myCorpus.cosine_sim('2013-Obama.txt', '2013-Obama.txt'))
 print(myCorpus.cosine_sim('1789-Washington.txt', '1793-Washington.txt'))
 print(myCorpus.cosine_sim('1793-Washington.txt', '2013-Obama.txt'))
+
+print(len(myCorpus.tfidf('2009-Obama.txt')))
+print(len(myCorpus.tfidf('2009-Obama.txt', True)))
+
 '''
 i = 0
 for key in tfidf['1789-Washington.txt']:

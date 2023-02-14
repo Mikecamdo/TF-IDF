@@ -43,25 +43,26 @@ class CorpusReader_TFIDF:
                     raw_idf_count[word].append(fileid)
         
             all_tf[fileid] = raw_tf_count
-            #print(fileid, raw_tf_count)
-        
-        #for word in allWords:
-        #    for fileid in all_tf:
-        #        if word not in all_tf[fileid]:
-        #            all_tf[fileid][word] = 0
         
 
         idf_count = { }
         for word in raw_idf_count:
             idf_count[word] = math.log2(numFiles / len(raw_idf_count[word]))
 
-        tf_idf = { } #tf-idf for each document in the corpus
+        tf_idf = { } #tf-idf for each document in the corpus (without terms that have 0 value)
+        tf_idf_with_zeros = { } #tf-idf for each document in the corpus (with terms that have 0 value)
         for fileid in all_tf:
             tf_idf[fileid] = { }
+            tf_idf_with_zeros[fileid] = { }
             for word in all_tf[fileid]:
-                tf_idf[fileid][word] = all_tf[fileid][word] * idf_count[word]
+                value = all_tf[fileid][word] * idf_count[word] #calculating tf-idf
+                if value > 0: #only add if not 0
+                    tf_idf[fileid][word] = value
+                tf_idf_with_zeros[fileid][word] = value
+                
 
         self.tf_idf = tf_idf
+        self.tf_idf_with_zeros = tf_idf_with_zeros
         self.idf_count = idf_count
         #FIXME do I need to save the tf???
 
@@ -84,13 +85,19 @@ class CorpusReader_TFIDF:
     
     # New Methods
     def tfidf(self, fileid, returnZero = False):
-        return self.tf_idf[fileid]
+        if returnZero:
+            return self.tf_idf_with_zeros[fileid]
+        else:
+            return self.tf_idf[fileid]
         #FIXME should return a dictionary
         #FIXME need to implement returnZero
 
 
     def tfidfAll(self, returnZero = False):
-        return self.tf_idf
+        if returnZero:
+            return self.tf_idf_with_zeros
+        else:
+            return self.tf_idf
         #FIXME should return a dictionary of dictionaries
         #FIXME need to implement returnZero
 
@@ -115,8 +122,8 @@ class CorpusReader_TFIDF:
 
 
     def cosine_sim(self, fileid1, fileid2):
-        A = np.array(list(self.tf_idf[fileid1].values()))
-        B = np.array(list(self.tf_idf[fileid2].values()))
+        A = np.array(list(self.tf_idf_with_zeros[fileid1].values()))
+        B = np.array(list(self.tf_idf_with_zeros[fileid2].values()))
         return np.dot(A,B)/(norm(A)*norm(B))
 
     ''' FIXME this is an example
