@@ -46,7 +46,7 @@ class CorpusReader_TFIDF:
                 tf_idf[fileid][word] = all_tf[fileid][word] * idf_count[word]
 
         self.tf_idf = tf_idf
-        self.idf = idf_count
+        self.idf_count = idf_count
         #FIXME do I need to save the tf???
 
         #print('Here')
@@ -75,17 +75,33 @@ class CorpusReader_TFIDF:
         return self.tf_idf[fileid]
         #FIXME should return a dictionary
         #FIXME need to implement returnZero
-'''
+
 
     def tfidfAll(self, returnZero = False):
+        return self.tf_idf
         #FIXME should return a dictionary of dictionaries
+        #FIXME need to implement returnZero
 
-    def tfidfNew(self, [words]):
+
+    def tfidfNew(self, words): #FIXME need to implement different tf type, etc.
+        raw_tf_count = { }
+        for word in words:
+            if word not in raw_tf_count:
+                raw_tf_count[word] = 1
+            elif word in raw_tf_count:
+                raw_tf_count[word] += 1
+
+        new_tf_idf = { }
+        for word in raw_tf_count:
+            new_tf_idf = raw_tf_count[word] * self.idf_count[word]
+
+        return new_tf_idf
 
 
     def idf(self):
+        return self.idf_count
 
-
+'''
     def cosine_sim(self, [fileid1, fileid2]):
 
 
