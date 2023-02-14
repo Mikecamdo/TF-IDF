@@ -53,7 +53,10 @@ class CorpusReader_TFIDF:
 
         idf_count = { }
         for word in raw_idf_count:
-            idf_count[word] = math.log2(numFiles / len(raw_idf_count[word]))
+            if idf == "smooth":
+                idf_count[word] = math.log2(1 + (numFiles / len(raw_idf_count[word])))
+            else: #if idf == "base"
+                idf_count[word] = math.log2(numFiles / len(raw_idf_count[word]))
 
         tf_idf = { } #tf-idf for each document in the corpus (without terms that have 0 value)
         tf_idf_with_zeros = { } #tf-idf for each document in the corpus (with terms that have 0 value)
