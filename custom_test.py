@@ -1,20 +1,28 @@
 from nltk.corpus import inaugural, PlaintextCorpusReader
 from CorpusReader_TFIDF import *
+import numpy as np
 
-myCorpus = CorpusReader_TFIDF(inaugural, tf="log", idf="smooth", stopWord="standard", toStem=True)
+
+
+
+myCorpus = CorpusReader_TFIDF(inaugural)
 print('Outside')
-tfidf = myCorpus.tfidfAll(True)
-for document in tfidf:
-    print(document, len(tfidf[document]))
 
-print(myCorpus.cosine_sim('2009-Obama.txt', '2013-Obama.txt'))
-print(myCorpus.cosine_sim('2013-Obama.txt', '2009-Obama.txt'))
-print(myCorpus.cosine_sim('2013-Obama.txt', '2013-Obama.txt'))
-print(myCorpus.cosine_sim('1789-Washington.txt', '1793-Washington.txt'))
-print(myCorpus.cosine_sim('1793-Washington.txt', '2013-Obama.txt'))
+print(myCorpus.tfidfNew(['citizens', 'economic', 'growth', 'economic']))
 
-print(len(myCorpus.tfidf('2009-Obama.txt')))
-print(len(myCorpus.tfidf('2009-Obama.txt', True)))
+
+#tfidf = myCorpus.tfidfAll(True)
+#for document in tfidf:
+#    print(document, len(tfidf[document]))
+
+#print(myCorpus.cosine_sim('2009-Obama.txt', '2013-Obama.txt'))
+#print(myCorpus.cosine_sim('2013-Obama.txt', '2009-Obama.txt'))
+#print(myCorpus.cosine_sim('2013-Obama.txt', '2013-Obama.txt'))
+#print(myCorpus.cosine_sim('1789-Washington.txt', '1793-Washington.txt'))
+#print(myCorpus.cosine_sim('1793-Washington.txt', '2013-Obama.txt'))
+
+#print(len(myCorpus.tfidf('2009-Obama.txt')))
+#print(len(myCorpus.tfidf('2009-Obama.txt', True)))
 
 
 '''

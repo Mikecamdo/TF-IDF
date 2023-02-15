@@ -10,7 +10,7 @@ print(inaugural.sents(['1789-washington.txt']))
 
 
 myCorpus = CorpusReader_TFIDF(inaugural)
-print(myCorpus.tfidf(['1789-Washington.txt']))
+print(myCorpus.tfidf('1789-Washington.txt'))
 
 print("-----\n")
 

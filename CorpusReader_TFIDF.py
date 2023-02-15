@@ -137,7 +137,7 @@ class CorpusReader_TFIDF:
         #FIXME need to implement returnZero
 
 
-    def tfidfNew(self, words): #FIXME need to implement different tf type, etc.
+    def tfidfNew(self, words):
         #FIXME do I need to include values with 0??
         raw_tf_count = { }
         allWords = [ ] #holds each unique word
@@ -145,6 +145,9 @@ class CorpusReader_TFIDF:
         for word in words:
             if self.toStem:
                 word = stemmer.stem(word)
+
+            if self.ignoreCase:
+                word = word.lower()
 
             if word not in raw_tf_count and word not in self.stops:
                 raw_tf_count[word] = 1
@@ -160,7 +163,7 @@ class CorpusReader_TFIDF:
 
         new_tf_idf = { }
         for word in raw_tf_count:
-            new_tf_idf = raw_tf_count[word] * self.idf_count[word]
+            new_tf_idf[word] = raw_tf_count[word] * self.idf_count[word]
 
         return new_tf_idf
 
@@ -186,11 +189,22 @@ class CorpusReader_TFIDF:
         cosine = np.dot(A,B)/(norm(A)*norm(B))
         print("Cosine Similarity:", cosine)
     '''
+
+    def cosine_sim_new(self, words, fileid):
+        A = self.tfidfNew(words)
+        A_words = list(A.keys())
+        B = self.tf_idf_with_zeros[fileid]
+        sum = 0
+        for word in B: #Finding the dot product
+            if word in A_words: #If word is not in A_words, then its value is 0 (and thus we add nothing)
+                sum += A[word] * B[word]
+        
+        C = np.array(list(A.values()))
+        D = np.array(list(B.values()))
+
+        return sum/(norm(C)*norm(D))
+
 '''
-
-    def cosine_sim_new(self, [words], fileid):
-
-
     def query(self, [words]):
         # FIXME this is a bonus if you implement it
 
