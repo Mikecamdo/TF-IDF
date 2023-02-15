@@ -9,7 +9,7 @@ myCorpus = CorpusReader_TFIDF(inaugural)
 print('Outside')
 
 print(myCorpus.tfidfNew(['citizens', 'economic', 'growth', 'economic']))
-
+print(myCorpus.query(['citizens', 'economic', 'growth']))
 
 #tfidf = myCorpus.tfidfAll(True)
 #for document in tfidf:

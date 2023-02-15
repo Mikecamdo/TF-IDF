@@ -204,8 +204,15 @@ class CorpusReader_TFIDF:
 
         return sum/(norm(C)*norm(D))
 
-'''
-    def query(self, [words]):
+    def query(self, words):
+        results = [ ]
+        for fileid in self.tf_idf_with_zeros:
+            cosine = self.cosine_sim_new(words, fileid)
+            results.append((fileid, cosine))
+
+        results.sort(reverse=True, key=lambda a: a[1]) #sorts in descending order
+
+        return results
         # FIXME this is a bonus if you implement it
 
-'''
+
