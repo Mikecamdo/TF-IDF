@@ -3,11 +3,15 @@ from nltk.corpus import inaugural, PlaintextCorpusReader
 from nltk.stem.snowball import SnowballStemmer
 
 stemmer = SnowballStemmer('english')
-words = ['cared', 'poop', 'Michael', 'running']
+words = ['care', 'Care', 'CARE', 'cArE', 'CaReD']
 stemIt = True
+lowerIt = False
 for w in words:
     if stemIt:
         w = stemmer.stem(w)
+    if lowerIt:
+        w = w.lower()
+
     print(w)
     
 

@@ -12,6 +12,7 @@ class CorpusReader_TFIDF:
     def __init__(self, corpus, tf = "raw", idf = "base", stopWord = "none", toStem = False, ignoreCase = True):
         #FIXME what should happen if non-supported parameters are given?? like tf = "random"
         #FIXME do I need to stem stop words???
+        #FIXME I think snowball stemmer automatically lowercases. Would it be better/more efficient to only check ignoreCase if toStem is False???
         self.corpus = corpus
         self.tf = tf
         self.idf = idf
@@ -35,6 +36,9 @@ class CorpusReader_TFIDF:
             for word in self.corpus.words(fileid):
                 if toStem: #if toStem == true
                     word = stemmer.stem(word)
+                
+                if ignoreCase: #if ignoreCase == true
+                    word = word.lower()
 
                 if word not in allWords and word not in stops:
                     allWords.append(word)
@@ -52,6 +56,9 @@ class CorpusReader_TFIDF:
             for word in self.corpus.words(fileid): #finds tf for each document
                 if toStem: #if toStem == true
                     word = stemmer.stem(word)
+
+                if ignoreCase: #if ignoreCase == true
+                    word = word.lower()
 
                 if word in raw_tf_count: #FIXME I think this if statement is redundant
                     raw_tf_count[word] += 1
