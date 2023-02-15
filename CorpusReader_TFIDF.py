@@ -24,7 +24,7 @@ class CorpusReader_TFIDF:
         stops = [ ] #leave empty if stopWord == "none"
         if stopWord == "standard":
             stops = set(stopwords.words('english'))
-        else: #if stopWord == fileName (that contains a list of stop words)
+        elif stopWord != "none": #if stopWord == fileName (that contains a list of stop words)
             with open(stopWord, 'r') as file:
                 for line in file:
                     for word in line.split():

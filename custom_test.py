@@ -1,25 +1,7 @@
 from nltk.corpus import inaugural, PlaintextCorpusReader
-#from CorpusReader_TFIDF import *
-from nltk.stem.snowball import SnowballStemmer
+from CorpusReader_TFIDF import *
 
-stemmer = SnowballStemmer('english')
-words = ['care', 'Care', 'CARE', 'cArE', 'CaReD']
-stemIt = True
-lowerIt = False
-for w in words:
-    if stemIt:
-        w = stemmer.stem(w)
-    if lowerIt:
-        w = w.lower()
-
-    print(w)
-    
-
-
-#stops = set(stopwords.words('english'))
-#print(stops)
-'''
-myCorpus = CorpusReader_TFIDF(inaugural)
+myCorpus = CorpusReader_TFIDF(inaugural, tf="log", idf="smooth", stopWord="standard", toStem=True)
 print('Outside')
 tfidf = myCorpus.tfidfAll(True)
 for document in tfidf:
@@ -33,7 +15,7 @@ print(myCorpus.cosine_sim('1793-Washington.txt', '2013-Obama.txt'))
 
 print(len(myCorpus.tfidf('2009-Obama.txt')))
 print(len(myCorpus.tfidf('2009-Obama.txt', True)))
-'''
+
 
 '''
 i = 0
