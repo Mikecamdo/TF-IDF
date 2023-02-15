@@ -3,6 +3,7 @@ import math
 import numpy as np
 from numpy.linalg import norm
 from nltk.corpus import stopwords
+from nltk.stem.snowball import SnowballStemmer
 
 #FIXME take a look at Plaintext Corpus Reader (?)
 
@@ -10,6 +11,7 @@ class CorpusReader_TFIDF:
     # Constructor
     def __init__(self, corpus, tf = "raw", idf = "base", stopWord = "none", toStem = False, ignoreCase = True):
         #FIXME what should happen if non-supported parameters are given?? like tf = "random"
+        #FIXME do I need to stem stop words???
         self.corpus = corpus
         self.tf = tf
         self.idf = idf
@@ -27,10 +29,13 @@ class CorpusReader_TFIDF:
                     for word in line.split():
                         stops.append(word)
 
-        
+        stemmer = SnowballStemmer('english') #FIXME should I make this conditional? (only create if needed)
         allWords = [ ] #Every word that appears in the corpus
         for fileid in self.corpus.fileids():
             for word in self.corpus.words(fileid):
+                if toStem: #if toStem == true
+                    word = stemmer.stem(word)
+
                 if word not in allWords and word not in stops:
                     allWords.append(word)
         #TF
@@ -45,7 +50,10 @@ class CorpusReader_TFIDF:
                 raw_tf_count[word] = 0
 
             for word in self.corpus.words(fileid): #finds tf for each document
-                if word in raw_tf_count:
+                if toStem: #if toStem == true
+                    word = stemmer.stem(word)
+
+                if word in raw_tf_count: #FIXME I think this if statement is redundant
                     raw_tf_count[word] += 1
 
                 if word not in raw_idf_count and word not in stops: #if first instance of word across all documents
@@ -126,7 +134,11 @@ class CorpusReader_TFIDF:
         #FIXME do I need to include values with 0??
         raw_tf_count = { }
         allWords = [ ] #holds each unique word
+        stemmer = SnowballStemmer('english')
         for word in words:
+            if self.toStem:
+                word = stemmer.stem(word)
+
             if word not in raw_tf_count and word not in self.stops:
                 raw_tf_count[word] = 1
                 allWords.append(word)

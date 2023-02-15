@@ -1,9 +1,19 @@
-import nltk
-from nltk.corpus import stopwords
 from nltk.corpus import inaugural, PlaintextCorpusReader
-from CorpusReader_TFIDF import *
-stops = set(stopwords.words('english'))
-print(stops)
+#from CorpusReader_TFIDF import *
+from nltk.stem.snowball import SnowballStemmer
+
+stemmer = SnowballStemmer('english')
+words = ['cared', 'poop', 'Michael', 'running']
+stemIt = True
+for w in words:
+    if stemIt:
+        w = stemmer.stem(w)
+    print(w)
+    
+
+
+#stops = set(stopwords.words('english'))
+#print(stops)
 '''
 myCorpus = CorpusReader_TFIDF(inaugural)
 print('Outside')
