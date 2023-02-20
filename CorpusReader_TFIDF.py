@@ -10,8 +10,21 @@ from nltk.stem.snowball import SnowballStemmer
 class CorpusReader_TFIDF:
     # Constructor
     def __init__(self, corpus, tf = "raw", idf = "base", stopWord = "none", toStem = False, ignoreCase = True):
+        #Making sure parameters have valid values
+        if type(corpus) != nltk.corpus.util.LazyCorpusLoader: #FIXME make sure this works with custom NLTK corpi
+            raise ValueError("corpus must be a valid NLTK corpus object")
+        if tf != "raw" and tf != "log":
+            raise ValueError("tf must have a value of 'raw' or 'log'")
+        if idf != "base" and idf != "smooth":
+            raise ValueError("idf must have a value of 'base' or 'smooth'")
+        if type(stopWord) != str:
+            raise ValueError("stopWord must have a value of 'none', 'standard', or a filename where stopwords are to be read")
+        if toStem != True and toStem != False:
+            raise ValueError("toStem must have a value of True or False")
+        if ignoreCase != True and ignoreCase != False:
+            raise ValueError("ignoreCase must have a value of True or False")
+        
         #FIXME what should happen if non-supported parameters are given?? like tf = "random"
-        #FIXME do I need to stem stop words???
         #FIXME I think snowball stemmer automatically lowercases. Would it be better/more efficient to only check ignoreCase if toStem is False???
         self.corpus = corpus
         self.tf = tf

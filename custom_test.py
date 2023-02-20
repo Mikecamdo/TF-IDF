@@ -4,12 +4,18 @@ import numpy as np
 
 
 
+print(type(inaugural))
+print(type(nltk.corpus.brown))
+print(type(nltk.corpus.alpino))
+print(type(nltk.corpus.switchboard))
+print(type(nltk.corpus.stopwords))
+print(type(nltk.corpus.universal_treebanks))
+print(type(inaugural) == nltk.corpus.util.LazyCorpusLoader)
+myCorpus = CorpusReader_TFIDF(inaugural, stopWord=14)
+#print('Outside')
 
-myCorpus = CorpusReader_TFIDF(inaugural)
-print('Outside')
-
-print(myCorpus.tfidfNew(['citizens', 'economic', 'growth', 'economic']))
-print(myCorpus.query(['citizens', 'economic', 'growth']))
+#print(myCorpus.tfidfNew(['citizens', 'economic', 'growth', 'economic']))
+#print(myCorpus.query(['citizens', 'economic', 'growth']))
 
 #tfidf = myCorpus.tfidfAll(True)
 #for document in tfidf:
