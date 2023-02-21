@@ -11,7 +11,7 @@ class CorpusReader_TFIDF:
     # Constructor
     def __init__(self, corpus, tf = "raw", idf = "base", stopWord = "none", toStem = False, ignoreCase = True):
         #Making sure parameters have valid values
-        if type(corpus) != nltk.corpus.util.LazyCorpusLoader: #FIXME make sure this works with custom NLTK corpi
+        if type(corpus) != nltk.corpus.util.LazyCorpusLoader and type(corpus) != nltk.corpus.reader.plaintext.PlaintextCorpusReader: #FIXME make sure this works with custom NLTK corpi
             raise ValueError("corpus must be a valid NLTK corpus object")
         if tf != "raw" and tf != "log":
             raise ValueError("tf must have a value of 'raw' or 'log'")
@@ -24,7 +24,6 @@ class CorpusReader_TFIDF:
         if ignoreCase != True and ignoreCase != False:
             raise ValueError("ignoreCase must have a value of True or False")
         
-        #FIXME what should happen if non-supported parameters are given?? like tf = "random"
         #FIXME I think snowball stemmer automatically lowercases. Would it be better/more efficient to only check ignoreCase if toStem is False???
         self.corpus = corpus
         self.tf = tf
@@ -132,14 +131,18 @@ class CorpusReader_TFIDF:
         return self.corpus.words(fileids)
     
     # New Methods
-    def tfidf(self, fileid, returnZero = False):
-        if returnZero:
-            return self.tf_idf_with_zeros[fileid]
+    def tfidf(self, fileid, returnZero = False): #FIXME should this be able to take multiple fileids in a list??
+        if type(fileid) == list:
+            if returnZero:
+                return self.tf_idf_with_zeros[fileid[0]]
+            else:
+                return self.tf_idf[fileid[0]]
         else:
-            return self.tf_idf[fileid]
+            if returnZero:
+                return self.tf_idf_with_zeros[fileid]
+            else:
+                return self.tf_idf[fileid]
         #FIXME should return a dictionary
-        #FIXME need to implement returnZero
-
 
     def tfidfAll(self, returnZero = False):
         if returnZero:
@@ -147,8 +150,6 @@ class CorpusReader_TFIDF:
         else:
             return self.tf_idf
         #FIXME should return a dictionary of dictionaries
-        #FIXME need to implement returnZero
-
 
     def tfidfNew(self, words):
         #FIXME do I need to include values with 0??
@@ -206,7 +207,11 @@ class CorpusReader_TFIDF:
     def cosine_sim_new(self, words, fileid):
         A = self.tfidfNew(words)
         A_words = list(A.keys())
-        B = self.tf_idf_with_zeros[fileid]
+
+        if type(fileid) == list:
+            B = self.tf_idf_with_zeros[fileid[0]]
+        else:
+            B = self.tf_idf_with_zeros[fileid]
         sum = 0
         for word in B: #Finding the dot product
             if word in A_words: #If word is not in A_words, then its value is 0 (and thus we add nothing)
@@ -226,6 +231,5 @@ class CorpusReader_TFIDF:
         results.sort(reverse=True, key=lambda a: a[1]) #sorts in descending order
 
         return results
-        # FIXME this is a bonus if you implement it
 
 

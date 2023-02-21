@@ -2,16 +2,29 @@ from nltk.corpus import inaugural, PlaintextCorpusReader
 from CorpusReader_TFIDF import *
 import numpy as np
 
+a = 4
+if a > 3:
+    b = 19
+else:
+    b = 22
 
+print(b)
 
-print(type(inaugural))
-print(type(nltk.corpus.brown))
-print(type(nltk.corpus.alpino))
-print(type(nltk.corpus.switchboard))
-print(type(nltk.corpus.stopwords))
-print(type(nltk.corpus.universal_treebanks))
-print(type(inaugural) == nltk.corpus.util.LazyCorpusLoader)
-myCorpus = CorpusReader_TFIDF(inaugural, stopWord=14)
+#print(inaugural.sents(['1789-washington.txt', '1793-washington.txt']))
+#print(inaugural.sents('1789-washington.txt'))
+#temp = [ 7, 8, 9]
+#print(type(temp))
+#print(type(['1789-washington.txt']) == list)
+
+#print(inaugural.fileids())
+#print(type(inaugural))
+#print(type(nltk.corpus.brown))
+#print(type(nltk.corpus.alpino))
+#print(type(nltk.corpus.switchboard))
+#print(type(nltk.corpus.stopwords))
+#print(type(nltk.corpus.universal_treebanks))
+#print(type(inaugural) == nltk.corpus.util.LazyCorpusLoader)
+#myCorpus = CorpusReader_TFIDF(inaugural, stopWord=14)
 #print('Outside')
 
 #print(myCorpus.tfidfNew(['citizens', 'economic', 'growth', 'economic']))
