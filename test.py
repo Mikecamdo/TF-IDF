@@ -31,10 +31,9 @@ print(myCorpus.cosine_sim_new(['citizens', 'economic', 'growth', 'economic'], '2
 #  create a set of text files, store them in a directory specified from 'rootDir' variable
 #
 #  
-'''
 
-rootDir = '/myhomedirectory'   # change that to the directory where the files are
-newCorpus = PlaintextCorpusReader(rootDir, '*')
+rootDir = 'C:\\Users\\mikec_g1kgiu8\\OneDrive\\Desktop\\CS 5322\\TF-IDF Custom Corpus'   # change that to the directory where the files are
+newCorpus = PlaintextCorpusReader(rootDir, '.*')
 tfidfCorpus = CorpusReader_TFIDF(newCorpus)
 
 q = tfidfCorpus.tfidfAll()
@@ -43,4 +42,3 @@ for x in q:
 
 print("-----\n")
 
-'''

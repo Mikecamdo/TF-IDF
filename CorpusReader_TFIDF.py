@@ -7,15 +7,16 @@ from nltk.stem.snowball import SnowballStemmer
 
 #FIXME take a look at Plaintext Corpus Reader (?)
 
-class CorpusReader_TFIDF:
+class CorpusReader_TFIDF: #FIXME if returnZero = True, does the tf-idf need to include words not in the document (but that are in the other document)?
+                          #FIXME in other words, do I include terms where tf == 0 but idf > 0???
     # Constructor
-    def __init__(self, corpus, tf = "raw", idf = "base", stopWord = "none", toStem = False, ignoreCase = True):
+    def __init__(self, corpus, tf = "raw", Idf = "base", stopWord = "none", toStem = False, ignoreCase = True):
         #Making sure parameters have valid values
         if type(corpus) != nltk.corpus.util.LazyCorpusLoader and type(corpus) != nltk.corpus.reader.plaintext.PlaintextCorpusReader: #FIXME make sure this works with custom NLTK corpi
             raise ValueError("corpus must be a valid NLTK corpus object")
         if tf != "raw" and tf != "log":
             raise ValueError("tf must have a value of 'raw' or 'log'")
-        if idf != "base" and idf != "smooth":
+        if Idf != "base" and Idf != "smooth":
             raise ValueError("idf must have a value of 'base' or 'smooth'")
         if type(stopWord) != str:
             raise ValueError("stopWord must have a value of 'none', 'standard', or a filename where stopwords are to be read")
@@ -27,7 +28,7 @@ class CorpusReader_TFIDF:
         #FIXME I think snowball stemmer automatically lowercases. Would it be better/more efficient to only check ignoreCase if toStem is False???
         self.corpus = corpus
         self.tf = tf
-        self.idf = idf
+        self.Idf = Idf
         self.stopWord = stopWord
         self.toStem = toStem
         self.ignoreCase = ignoreCase
@@ -90,7 +91,7 @@ class CorpusReader_TFIDF:
 
         idf_count = { }
         for word in raw_idf_count:
-            if idf == "smooth":
+            if Idf == "smooth":
                 idf_count[word] = math.log2(1 + (numFiles / len(raw_idf_count[word])))
             else: #if idf == "base"
                 idf_count[word] = math.log2(numFiles / len(raw_idf_count[word]))
@@ -174,10 +175,12 @@ class CorpusReader_TFIDF:
                 if raw_tf_count[word] > 0: #FIXME this if statement is redundant (I think)
                     raw_tf_count[word] = 1 + math.log2(raw_tf_count[word])
 
-
         new_tf_idf = { }
         for word in raw_tf_count:
-            new_tf_idf[word] = raw_tf_count[word] * self.idf_count[word]
+            if word in self.idf_count.keys():
+                new_tf_idf[word] = raw_tf_count[word] * self.idf_count[word]
+            else:
+                new_tf_idf[word] = 0 #FIXME he said not to include values of 0. what to do??
 
         return new_tf_idf
 
@@ -186,10 +189,14 @@ class CorpusReader_TFIDF:
         return self.idf_count
 
 
-    def cosine_sim(self, fileid1, fileid2):
+    def cosine_sim(self, fileid1, fileid2): #FIXME are the fileids passed in a list???
         A = np.array(list(self.tf_idf_with_zeros[fileid1].values()))
         B = np.array(list(self.tf_idf_with_zeros[fileid2].values()))
-        return np.dot(A,B)/(norm(A)*norm(B))
+        bottom = norm(A)*norm(B)
+        if bottom == 0:
+            return 0
+        else:
+            return np.dot(A,B)/bottom
 
     ''' FIXME this is an example
         # define two lists or array
@@ -219,8 +226,16 @@ class CorpusReader_TFIDF:
         
         C = np.array(list(A.values()))
         D = np.array(list(B.values()))
+        #print("INSIDE")
+        #print(sum)
+        #print(C)
+        #print(D)
 
-        return sum/(norm(C)*norm(D))
+        bottom = norm(C)*norm(D)
+        if bottom == 0:
+            return 0
+        else:
+            return sum/bottom
 
     def query(self, words):
         results = [ ]

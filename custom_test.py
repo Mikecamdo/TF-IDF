@@ -1,14 +1,52 @@
 from nltk.corpus import inaugural, PlaintextCorpusReader
 from CorpusReader_TFIDF import *
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.feature_extraction.text import TfidfTransformer
 import numpy as np
+import pandas as pd
+import re
+from numpy.linalg import norm
 
-a = 4
-if a > 3:
-    b = 19
-else:
-    b = 22
+rootDir = 'C:\\Users\\mikec_g1kgiu8\\OneDrive\\Desktop\\CS 5322\\TF-IDF Custom Corpus'   # change that to the directory where the files are
+newCorpus = PlaintextCorpusReader(rootDir, '.*')
+tfidfCorpus = CorpusReader_TFIDF(newCorpus)
 
-print(b)
+q = tfidfCorpus.tfidfAll()
+for x in q:
+   print(x, q[x])
+
+print(tfidfCorpus.cosine_sim('Temp1.txt', 'Temp5.txt'))
+print(tfidfCorpus.query(['good']))
+
+
+#print("Doc6.txt", tfidfCorpus.tfidf("Doc6.txt"))
+#print("New", tfidfCorpus.tfidfNew(['My', 'name', 'is', 'Bob', 'and', 'you', 'are', 'about', 'to', 'die']))
+#print(tfidfCorpus.query(['My', 'name', 'is', 'Bob', 'and', 'you', 'are', 'about', 'to', 'die']))
+
+'''
+sentences = list()
+with open("C:\\Users\\mikec_g1kgiu8\\OneDrive\\Desktop\\CS 5322\\TF-IDF Custom Corpus\\Test1.txt") as file:
+    for line in file:
+        for l in re.split(r"\.\s|\?\s|\!\s|\n",line):
+            if l:
+                sentences.append(l)
+cvec = CountVectorizer(stop_words='english', min_df=3, max_df=0.5, ngram_range=(1,2))
+sf = cvec.fit_transform(sentences)
+
+transformer = TfidfTransformer()
+transformed_weights = transformer.fit_transform(sf)
+weights = np.asarray(transformed_weights.mean(axis=0)).ravel().tolist()
+weights_df = pd.DataFrame({'term': cvec.get_feature_names_out(), 'weight': weights})
+
+weights_df.sort_values(by='weight', ascending=False).head(50)
+
+print(weights_df)
+
+
+'''
+
+
+
 
 #print(inaugural.sents(['1789-washington.txt', '1793-washington.txt']))
 #print(inaugural.sents('1789-washington.txt'))
