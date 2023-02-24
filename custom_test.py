@@ -1,107 +1,55 @@
-from nltk.corpus import inaugural, PlaintextCorpusReader
+from nltk.corpus import inaugural, brown, treebank, names, PlaintextCorpusReader
 from CorpusReader_TFIDF import *
-from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.feature_extraction.text import TfidfTransformer
-import numpy as np
-import pandas as pd
-import re
-from numpy.linalg import norm
 
-rootDir = 'C:\\Users\\mikec_g1kgiu8\\OneDrive\\Desktop\\CS 5322\\TF-IDF Custom Corpus'   # change that to the directory where the files are
-newCorpus = PlaintextCorpusReader(rootDir, '.*')
-tfidfCorpus = CorpusReader_TFIDF(newCorpus)
+try:
+    invalid1 = CorpusReader_TFIDF("word")
+except:
+   print("invalid1 not created")
 
-q = tfidfCorpus.tfidfAll()
-for x in q:
-   print(x, q[x])
+try:
+    invalid2 = CorpusReader_TFIDF(inaugural, tf=True)
+except:
+   print("invalid2 not created")
 
-print(tfidfCorpus.cosine_sim('Temp1.txt', 'Temp5.txt'))
-print(tfidfCorpus.query(['good']))
+try:
+    invalid3 = CorpusReader_TFIDF(inaugural, Idf=87)
+except:
+   print("invalid3 not created")
 
+try:
+    invalid4 = CorpusReader_TFIDF(inaugural, stopWord=False)
+except:
+   print("invalid4 not created")
 
-#print("Doc6.txt", tfidfCorpus.tfidf("Doc6.txt"))
-#print("New", tfidfCorpus.tfidfNew(['My', 'name', 'is', 'Bob', 'and', 'you', 'are', 'about', 'to', 'die']))
-#print(tfidfCorpus.query(['My', 'name', 'is', 'Bob', 'and', 'you', 'are', 'about', 'to', 'die']))
+try:
+    invalid5 = CorpusReader_TFIDF(inaugural, toStem=77)
+except:
+   print("invalid5 not created")
 
-'''
-sentences = list()
-with open("C:\\Users\\mikec_g1kgiu8\\OneDrive\\Desktop\\CS 5322\\TF-IDF Custom Corpus\\Test1.txt") as file:
-    for line in file:
-        for l in re.split(r"\.\s|\?\s|\!\s|\n",line):
-            if l:
-                sentences.append(l)
-cvec = CountVectorizer(stop_words='english', min_df=3, max_df=0.5, ngram_range=(1,2))
-sf = cvec.fit_transform(sentences)
+try:
+    invalid6 = CorpusReader_TFIDF(inaugural, ignoreCase="True")
+except:
+   print("invalid6 not created")
 
-transformer = TfidfTransformer()
-transformed_weights = transformer.fit_transform(sf)
-weights = np.asarray(transformed_weights.mean(axis=0)).ravel().tolist()
-weights_df = pd.DataFrame({'term': cvec.get_feature_names_out(), 'weight': weights})
+try:
+    invalid7 = CorpusReader_TFIDF(inaugural, tf="log", Idf="smooth", toStem="Yes")
+except:
+   print("invalid7 not created")
 
-weights_df.sort_values(by='weight', ascending=False).head(50)
+corpus1 = CorpusReader_TFIDF(inaugural)
 
-print(weights_df)
+#print("Corpus1", corpus1.tfidf('1789-Washington.txt'))
+print(corpus1.tfidfNew(['A', 'new', 'speech', 'about', 'being', 'a', 'president']))
+print(corpus1.idf()['a'])
 
+all = corpus1.tfidfAll()
+for single in all:
+    if 'a' not in all[single]:
+        print(single)
 
-'''
+print(corpus1.raw('1793-Washington.txt'))
 
+#rootDir = 'C:\\Users\\mikec_g1kgiu8\\OneDrive\\Desktop\\CS 5322\\TF-IDF Custom Corpus'   # change that to the directory where the files are
+#newCorpus = PlaintextCorpusReader(rootDir, '.*')
 
-
-
-#print(inaugural.sents(['1789-washington.txt', '1793-washington.txt']))
-#print(inaugural.sents('1789-washington.txt'))
-#temp = [ 7, 8, 9]
-#print(type(temp))
-#print(type(['1789-washington.txt']) == list)
-
-#print(inaugural.fileids())
-#print(type(inaugural))
-#print(type(nltk.corpus.brown))
-#print(type(nltk.corpus.alpino))
-#print(type(nltk.corpus.switchboard))
-#print(type(nltk.corpus.stopwords))
-#print(type(nltk.corpus.universal_treebanks))
-#print(type(inaugural) == nltk.corpus.util.LazyCorpusLoader)
-#myCorpus = CorpusReader_TFIDF(inaugural, stopWord=14)
-#print('Outside')
-
-#print(myCorpus.tfidfNew(['citizens', 'economic', 'growth', 'economic']))
-#print(myCorpus.query(['citizens', 'economic', 'growth']))
-
-#tfidf = myCorpus.tfidfAll(True)
-#for document in tfidf:
-#    print(document, len(tfidf[document]))
-
-#print(myCorpus.cosine_sim('2009-Obama.txt', '2013-Obama.txt'))
-#print(myCorpus.cosine_sim('2013-Obama.txt', '2009-Obama.txt'))
-#print(myCorpus.cosine_sim('2013-Obama.txt', '2013-Obama.txt'))
-#print(myCorpus.cosine_sim('1789-Washington.txt', '1793-Washington.txt'))
-#print(myCorpus.cosine_sim('1793-Washington.txt', '2013-Obama.txt'))
-
-#print(len(myCorpus.tfidf('2009-Obama.txt')))
-#print(len(myCorpus.tfidf('2009-Obama.txt', True)))
-
-
-'''
-i = 0
-for key in tfidf['1789-Washington.txt']:
-    i += 1
-    if i % 1000 == 0:
-        print(i, key, tfidf['1789-Washington.txt'][key])
-
-print('Between the two')
-
-i = 0
-for key in tfidf['1793-Washington.txt']:
-    i += 1
-    if i % 1000 == 0:
-        print(i, key, tfidf['1793-Washington.txt'][key])
-'''
-    
-    #for word in tfidf[document]:
-    #    if tfidf[document][word] == 0:
-    #        print(word, tfidf[document][word])
-#print(myCorpus.tfidf('1789-Washington.txt'))
-#print(inaugural.raw('1789-Washington.txt'))
-#for word in inaugural.words('1789-Washington.txt'):
-#    print(word, end=" ")
+#corpus2 = CorpusReader_TFIDF(newCorpus, toStem=True)
